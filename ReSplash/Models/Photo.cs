@@ -21,7 +21,7 @@ namespace ReSplash.Models
 
         public string Location { get; set; } = string.Empty;
 
-        User User { get; set; } = new(); 
+        public User User { get; set; } = new(); 
 
     }
 }

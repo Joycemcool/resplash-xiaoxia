@@ -12,7 +12,7 @@ using ReSplash.Data;
 namespace ReSplash.Migrations
 {
     [DbContext(typeof(ReSplashContext))]
-    [Migration("20231003151016_InitialCommit")]
+    [Migration("20231006160642_InitialCommit")]
     partial class InitialCommit
     {
         /// <inheritdoc />
