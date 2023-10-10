@@ -12,14 +12,20 @@ namespace ReSplash.Pages.Photos
 {
     public class CreateModel : PageModel
     {
-        private readonly ReSplash.Data.ReSplashContext _context;
+        private readonly ReSplashContext _context;
         
         [BindProperty]
         public Photo Photo { get; set; } = default!;
 
-        public CreateModel(ReSplash.Data.ReSplashContext context)
+        [BindProperty]
+        public IFormFile ImageUpload { get; set; }
+
+        IWebHostEnvironment _env;
+
+        public CreateModel(ReSplashContext context, IWebHostEnvironment env)
         {
             _context = context;
+            _env = env;
         }
 
         public IActionResult OnGet()
@@ -39,8 +45,10 @@ namespace ReSplash.Pages.Photos
                 Photo.User = user;
             }
 
-            // TO-DO - get the actual image file name
-            Photo.FileName = "";
+            // Make a unique image name
+            string imageName = DateTime.Now.ToString("yyyy-MM-dd-hh-mm-ss-") + ImageUpload.FileName;
+                        
+            Photo.FileName = imageName;
             Photo.PublishDate = DateTime.Now;
             Photo.ImageViews = 0;
             Photo.ImageDownloads = 0;
@@ -54,6 +62,17 @@ namespace ReSplash.Pages.Photos
             // Save to database
             _context.Photo.Add(Photo);
             await _context.SaveChangesAsync();
+
+            //
+            // Upload the Image to the www/photo folder
+            //
+            
+            string file = _env.ContentRootPath + "\\wwwroot\\photos\\" + imageName;
+
+            using(FileStream fileStream = new FileStream(file, FileMode.Create))
+            {
+                ImageUpload.CopyTo(fileStream);
+            }
 
             return RedirectToPage("./Index");
         }
