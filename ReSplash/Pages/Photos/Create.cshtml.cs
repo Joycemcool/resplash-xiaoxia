@@ -13,19 +13,31 @@ namespace ReSplash.Pages.Photos
     public class CreateModel : PageModel
     {
         private readonly ReSplashContext _context;
-        
+        IWebHostEnvironment _env;
+
         [BindProperty]
         public Photo Photo { get; set; } = default!;
 
         [BindProperty]
         public IFormFile ImageUpload { get; set; }
 
-        IWebHostEnvironment _env;
+        public List<SelectListItem> CategoryList { get; set; } = new();
+
 
         public CreateModel(ReSplashContext context, IWebHostEnvironment env)
         {
             _context = context;
             _env = env;
+
+            List<Category> _categories = _context.Category.ToList();
+            foreach(Category category in _categories)
+            {
+                CategoryList.Add(new SelectListItem()
+                {
+                    Value = category.CategoryId.ToString(),
+                    Text = category.CategoryName
+                });
+            }
         }
 
         public IActionResult OnGet()
@@ -46,12 +58,16 @@ namespace ReSplash.Pages.Photos
             }
 
             // Make a unique image name
-            string imageName = DateTime.Now.ToString("yyyy-MM-dd-hh-mm-ss-") + ImageUpload.FileName;
+            string imageName = DateTime.Now.ToString("yyyy-MM-dd-hh-mm-ss-") + ImageUpload.FileName;            
                         
             Photo.FileName = imageName;
             Photo.PublishDate = DateTime.Now;
             Photo.ImageViews = 0;
             Photo.ImageDownloads = 0;
+
+            // Get and set the Category - get the category from the database and attach to this photo
+            Category category = _context.Category.Single(m => m.CategoryId == Photo.Category.CategoryId);
+            Photo.Category = category;
 
             // Validate model
             if (!ModelState.IsValid || _context.Photo == null || Photo == null)

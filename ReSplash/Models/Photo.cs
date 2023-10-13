@@ -23,5 +23,7 @@ namespace ReSplash.Models
 
         public User User { get; set; } = new(); 
 
+        public Category Category { get; set; } = new();
+
     }
 }

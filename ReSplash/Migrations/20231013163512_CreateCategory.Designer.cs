@@ -12,8 +12,8 @@ using ReSplash.Data;
 namespace ReSplash.Migrations
 {
     [DbContext(typeof(ReSplashContext))]
-    [Migration("20231006160642_InitialCommit")]
-    partial class InitialCommit
+    [Migration("20231013163512_CreateCategory")]
+    partial class CreateCategory
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -25,6 +25,23 @@ namespace ReSplash.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("ReSplash.Models.Category", b =>
+                {
+                    b.Property<int>("CategoryId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CategoryId"));
+
+                    b.Property<string>("CategoryName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("CategoryId");
+
+                    b.ToTable("Category");
+                });
+
             modelBuilder.Entity("ReSplash.Models.Photo", b =>
                 {
                     b.Property<int>("PhotoId")
@@ -32,6 +49,9 @@ namespace ReSplash.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("PhotoId"));
+
+                    b.Property<int>("CategoryId")
+                        .HasColumnType("int");
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -54,10 +74,12 @@ namespace ReSplash.Migrations
                     b.Property<DateTime>("PublishDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("UserId")
+                    b.Property<int>("UserId")
                         .HasColumnType("int");
 
                     b.HasKey("PhotoId");
+
+                    b.HasIndex("CategoryId");
 
                     b.HasIndex("UserId");
 
@@ -109,9 +131,26 @@ namespace ReSplash.Migrations
 
             modelBuilder.Entity("ReSplash.Models.Photo", b =>
                 {
-                    b.HasOne("ReSplash.Models.User", null)
+                    b.HasOne("ReSplash.Models.Category", "Category")
                         .WithMany("Photos")
-                        .HasForeignKey("UserId");
+                        .HasForeignKey("CategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ReSplash.Models.User", "User")
+                        .WithMany("Photos")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Category");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("ReSplash.Models.Category", b =>
+                {
+                    b.Navigation("Photos");
                 });
 
             modelBuilder.Entity("ReSplash.Models.User", b =>
