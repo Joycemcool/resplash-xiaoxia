@@ -3,13 +3,21 @@
 
 @{
     ViewData["Title"] = "Delete";
+    
+    string imagePath = "/photos/" + Model.Photo.FileName;
 }
 
 <h1>Are you sure you want to delete this?</h1>
 
-<p>
-    IMAGE GOES HERE
-</p>
+<br />
+
+<div class="row">
+    <div class="col-md-6">
+        <img src="@imagePath" class="img-fluid" />
+    </div>
+</div>
+
+<br />
 
 <form method="post">
     <input type="hidden" asp-for="Photo.PhotoId" />

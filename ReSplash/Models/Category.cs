@@ -7,6 +7,7 @@ namespace ReSplash.Models
         [DisplayName("Category")]
         public int CategoryId { get; set; }
 
+        [DisplayName("Name")]
         public string CategoryName { get; set; } = string.Empty;
 
         
