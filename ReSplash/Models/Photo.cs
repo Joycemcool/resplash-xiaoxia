@@ -28,5 +28,7 @@ namespace ReSplash.Models
 
         public Category Category { get; set; } = new();
 
+        public List<PhotoTag> PhotoTags { get; set; } = new();
+
     }
 }
