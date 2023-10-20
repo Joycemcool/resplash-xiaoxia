@@ -4,7 +4,7 @@ namespace ReSplash.Models
 {
     [PrimaryKey(nameof(PhotoId), nameof(TagId))]
     public class PhotoTag
-    {
+    { 
         public int PhotoId { get; set; }
 
         public int TagId { get; set; }

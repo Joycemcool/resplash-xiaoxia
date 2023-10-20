@@ -56,7 +56,11 @@ body {
     max-width: 100%;
 }
 
-@media (max-width: 922px){
+.no-bold {
+    font-weight: normal;
+}
+
+@media (max-width: 922px) {
     .pin-container {
         columns: 2;
     }
