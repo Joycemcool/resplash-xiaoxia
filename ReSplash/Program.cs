@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using ReSplash.Data;
 var builder = WebApplication.CreateBuilder(args);
@@ -7,6 +8,17 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorPages();
 builder.Services.AddDbContext<ReSplashContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("ReSplashContext") ?? throw new InvalidOperationException("Connection string 'ReSplashContext' not found.")));
+
+// Add cookie authentication
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie(options =>
+    {
+        options.ExpireTimeSpan = TimeSpan.FromMinutes(20);
+        options.SlidingExpiration = true;        
+        options.LoginPath = "/Users/Login";
+        options.LogoutPath = "/Users/Logout";
+        options.AccessDeniedPath = "/Users/AccessDenied";
+    });
 
 var app = builder.Build();
 
@@ -23,6 +35,8 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+// Add uses authentication
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapRazorPages();

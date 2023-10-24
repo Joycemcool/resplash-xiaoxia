@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -10,7 +11,7 @@ using ReSplash.Models;
 
 namespace ReSplash.Pages.Photos
 {
-    
+    [Authorize]
     public class CreateModel : PageModel
     {
         private readonly ReSplashContext _context;
@@ -56,8 +57,9 @@ namespace ReSplash.Pages.Photos
             // Set default values
             //
 
-            User? user = _context.User.Where(u => u.UserId == 1).SingleOrDefault();
-
+            int userId = int.Parse(User.Identity.Name);
+            User? user = _context.User.Where(u => u.UserId == userId).SingleOrDefault();
+            
             if (user != null)
             {
                 Photo.User = user;
