@@ -2,6 +2,8 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using ReSplash.Data;
+using ReSplash.Models;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -40,5 +42,26 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapRazorPages();
+
+//
+// Photos API
+//
+app.MapGet("/photo/get/{id}", (int id, ReSplashContext _context) =>
+{
+    Photo? photo = _context.Photo
+        //.Include("User").Include("Category").Include("PhotoTags").Include("PhotoTags.Tag")
+        .Where(m => m.PhotoId == id)
+        .SingleOrDefault();
+
+    if(photo != null)
+    {
+        return Results.Json(photo);
+    }
+    else
+    {
+        return Results.Text("Photo not found.");
+    }
+});
+
 
 app.Run();

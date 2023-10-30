@@ -52,9 +52,15 @@ body {
     position: relative;
 }
 
-.pin-container .pin-box img {
-    max-width: 100%;
-}
+    .pin-container .pin-box img {
+        max-width: 100%;
+        cursor: zoom-in;
+    }
+
+        .pin-container .pin-box img:hover {
+            cursor: zoom-in;
+            filter: brightness(75%);
+        }
 
 .no-bold {
     font-weight: normal;

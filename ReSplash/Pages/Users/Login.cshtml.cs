@@ -40,13 +40,14 @@ namespace ReSplash.Pages.Users
             // If the user doesn't exist, return to the login page
             if (dbUser == null)
             {
-                return RedirectToPage("/Users/Register");
+                ModelState.AddModelError("User.Email", "Username not found.");
+                return Page();
             }
 
             // Check the password
             if (!BCrypt.Net.BCrypt.Verify(User.Password, dbUser.Password))
             {
-                ModelState.AddModelError("User.Password", "Incorrect password");
+                ModelState.AddModelError("User.Password", "Incorrect password.");
                 return Page();
             }
 
