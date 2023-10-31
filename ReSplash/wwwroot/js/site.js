@@ -32,10 +32,3 @@ $("#photoModal").on('show.bs.modal', function (event) {
         $('#modal-tags').text('Tags: ' + strTags)
     })
 })
-
-/*
-<div id="modal-createdby"></div>
-                  <div id="modal-description"></div>
-                  <div id="category"></div>
-                  <div id="modal-tags"></div>
-                  */
